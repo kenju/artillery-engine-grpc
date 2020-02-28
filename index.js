@@ -6,50 +6,68 @@ function ArtilleryGRPCEngine(script, ee, helpers) {
   this.ee = ee
   this.helpers = helpers
 
-  console.log('#constructor')
   const { config } = this.script
   const { target, engines } = config
-  console.log(engines.grpc)
-  const packageDefinition = protoLoader.loadSync(
-    engines.grpc.protobufDefinition,
-    {
-      keepCase: true,
-      longs: String,
-      enums: String,
-      defaults: true,
-      oneofs: true,
-    },
-  )
-  const proto = grpc.loadPackageDefinition(packageDefinition)
+  const {
+    filepath,
+    service,
+    package,
+  } = engines.grpc.protobufDefinition
 
-  // TODO: make it meta programming
-  const client = new proto.backend.services.v1.HelloService(
-    target,
-    grpc.credentials.createInsecure(),
-  )
-  this.client = client
+  // @return GrpcObject
+  function loadPackageDefinition() {
+    const packageDefinition = protoLoader.loadSync(
+      filepath,
+      {
+        keepCase: true,
+        longs: String,
+        enums: String,
+        defaults: true,
+        oneofs: true,
+      },
+    )
+    return grpc.loadPackageDefinition(packageDefinition)
+  }
+
+  function getService() {
+    const grpcObject = loadPackageDefinition()
+    const packages = package.split('.')
+    const services = packages.reduce((obj, p) => obj = obj[p], grpcObject)
+    return services[service]
+  }
+
+  function initClient() {
+    const service = getService()
+    const client = new service(
+      target,
+      grpc.credentials.createInsecure(),
+    )
+    return client
+  }
+  this.client = initClient()
 
   return this
 }
 
 ArtilleryGRPCEngine.prototype.createScenario = function createScenario(scenarioSpec, ee) {
-  function executeScenario() {
+  const executeScenario = () => {
     ee.emit('started')
+
+    scenarioSpec.flow.forEach((flow) => {
+      Object.keys(flow).forEach((rpcName) => {
+        const args = flow[rpcName]
+        this.client[rpcName](args, (error, response) => {
+          if (error) {
+            ee.emit('error', error)
+          } else {
+            ee.emit('response', response)
+          }
+        })
+      })
+    })
+
     ee.emit('done')
   }
-  console.log('#createScenario')
-  console.log(scenarioSpec)
-
-  // TODO: execute based on flow
-  console.log('sending gRPC requect')
-  this.client.Hello({ id: 1, name: 'Alice' }, (error, response) => {
-    if (!error) {
-      console.log(response.message)
-    } else {
-      console.error(error)
-    }
-  })
-
   return executeScenario
 }
 

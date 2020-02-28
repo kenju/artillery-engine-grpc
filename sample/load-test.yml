@@ -1,15 +1,28 @@
+# @doc https://artillery.io/docs/script-reference/
 config:
-  target: '127.0.0.1:8080'
+  target: 127.0.0.1:8080
   phases:
-    - duration: 60
-      arrivalRate: 20
+    - duration: 10 #sec
+      arrivalRate: 10
+      pause: 15 #sec
   engines:
     grpc:
-      protobufDefinition: 'protobuf-definitions/backend/services/v1/hello.proto'
+      protobufDefinition:
+        filepath: protobuf-definitions/backend/services/v1/hello.proto
+        package: backend.services.v1
+        service: HelloService
 
 scenarios:
-  - name: "test backend-service running at http://localhost:8000"
-    engine: "grpc"
+  - name: test backend-service running at http://localhost:8000
+    engine: grpc
     flow:
-    - get:
-        url: "/docs"
+    # list RPC names with its arguments
+    - Hello:
+        id: 1
+        name: Alice
+    - Hello:
+        id: 2
+        name: Bob
+    - Hello:
+        id: 3
+        name: Chris
