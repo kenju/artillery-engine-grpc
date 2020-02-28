@@ -7,12 +7,14 @@ function ArtilleryGRPCEngine(script, ee, helpers) {
   this.helpers = helpers
 
   const { config } = this.script
+  this.client = this.initGRPCClient(config)
+
+  return this
+}
+
+ArtilleryGRPCEngine.prototype.initGRPCClient = function initClient(config) {
   const { target, engines } = config
-  const {
-    filepath,
-    service,
-    package,
-  } = engines.grpc.protobufDefinition
+  const { filepath, service, package, } = engines.grpc.protobufDefinition
 
   // @return GrpcObject
   function loadPackageDefinition() {
@@ -29,24 +31,15 @@ function ArtilleryGRPCEngine(script, ee, helpers) {
     return grpc.loadPackageDefinition(packageDefinition)
   }
 
-  function getService() {
+  function getServiceClient() {
     const grpcObject = loadPackageDefinition()
     const packages = package.split('.')
     const services = packages.reduce((obj, p) => obj = obj[p], grpcObject)
     return services[service]
   }
 
-  function initClient() {
-    const service = getService()
-    const client = new service(
-      target,
-      grpc.credentials.createInsecure(),
-    )
-    return client
-  }
-  this.client = initClient()
-
-  return this
+  const serviceClient = getServiceClient()
+  return new serviceClient(target, grpc.credentials.createInsecure())
 }
 
 ArtilleryGRPCEngine.prototype.createScenario = function createScenario(scenarioSpec, ee) {
