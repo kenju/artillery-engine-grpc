@@ -3,8 +3,10 @@ package main
 import (
 	"context"
 	"fmt"
+	"math/rand"
 	"net"
 	"os"
+	"time"
 
 	grpc_middleware "github.com/grpc-ecosystem/go-grpc-middleware"
 	grpc_recovery "github.com/grpc-ecosystem/go-grpc-middleware/recovery"
@@ -79,7 +81,28 @@ func (bs *backendServer) Hello(
 		"request": req,
 	}).Info("Hello()")
 
+	// NOTE: sleep for rondom milliseconds for benchmarking
+	r := rand.Intn(100) // up to 100 msec
+	time.Sleep(time.Duration(r) * time.Millisecond)
+
 	return &backend_services_v1.HelloResponse{
-		Message: fmt.Sprintf("%d", codes.OK),
+		Message: fmt.Sprintf("world (code=%d)", codes.OK),
+	}, nil
+}
+
+func (bs *backendServer) Bye(
+	ctx context.Context,
+	req *backend_services_v1.ByeRequest,
+) (*backend_services_v1.ByeResponse, error) {
+	log.WithFields(log.Fields{
+		"request": req,
+	}).Info("Bye()")
+
+	// NOTE: sleep for rondom milliseconds for benchmarking
+	r := rand.Intn(500) // up to 500 msec
+	time.Sleep(time.Duration(r) * time.Millisecond)
+
+	return &backend_services_v1.ByeResponse{
+		Message: fmt.Sprintf("bye (code=%d)", codes.OK),
 	}, nil
 }

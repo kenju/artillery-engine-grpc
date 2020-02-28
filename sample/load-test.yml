@@ -3,8 +3,7 @@ config:
   target: 127.0.0.1:8080
   phases:
     - duration: 10 #sec
-      arrivalRate: 10
-      pause: 15 #sec
+      arrivalRate: 1
   engines:
     grpc:
       protobufDefinition:
@@ -15,14 +14,20 @@ config:
 scenarios:
   - name: test backend-service running at http://localhost:8000
     engine: grpc
-    flow:
     # list RPC names with its arguments
-    - Hello:
-        id: 1
-        name: Alice
-    - Hello:
-        id: 2
-        name: Bob
-    - Hello:
-        id: 3
-        name: Chris
+    flow:
+      # You can log any prefereed string
+      # - log: 'scenario started'
+      - Hello:
+          id: 1
+          name: Alice
+      - Hello:
+          id: 2
+          name: Bob
+      - Hello:
+          id: 3
+          name: Chris
+      - Bye:
+          id: 4
+      - Bye:
+          id: 5
