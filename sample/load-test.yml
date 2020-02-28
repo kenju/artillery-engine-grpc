@@ -16,7 +16,8 @@ scenarios:
     engine: grpc
     # list RPC names with its arguments
     flow:
-      - log: 'scenario started'
+      # You can log any prefereed string
+      # - log: 'scenario started'
       - Hello:
           id: 1
           name: Alice
