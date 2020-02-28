@@ -1,11 +1,15 @@
 config:
-  target: 'http://localhost:8000'
+  target: '127.0.0.1:8080'
   phases:
     - duration: 60
       arrivalRate: 20
+  engines:
+    grpc:
+      protobufDefinition: 'protobuf-definitions/backend/services/v1/hello.proto'
+
 scenarios:
-  - name: "Custom engine scenario"
+  - name: "test backend-service running at http://localhost:8000"
     engine: "grpc"
-  - flow:
+    flow:
     - get:
         url: "/docs"
