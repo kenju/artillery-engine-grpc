@@ -1,8 +1,10 @@
+# @doc https://artillery.io/docs/script-reference/
 config:
   target: 127.0.0.1:8080
   phases:
-    - duration: 60
-      arrivalRate: 20
+    - duration: 10 #sec
+      arrivalRate: 10
+      pause: 15 #sec
   engines:
     grpc:
       protobufDefinition:

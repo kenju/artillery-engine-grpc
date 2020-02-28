@@ -50,28 +50,24 @@ function ArtilleryGRPCEngine(script, ee, helpers) {
 }
 
 ArtilleryGRPCEngine.prototype.createScenario = function createScenario(scenarioSpec, ee) {
-  function executeScenario() {
+  const executeScenario = () => {
     ee.emit('started')
+
+    scenarioSpec.flow.forEach((flow) => {
+      Object.keys(flow).forEach((rpcName) => {
+        const args = flow[rpcName]
+        this.client[rpcName](args, (error, response) => {
+          if (error) {
+            ee.emit('error', error)
+          } else {
+            ee.emit('response', response)
+          }
+        })
+      })
+    })
 
     ee.emit('done')
   }
-
-  console.log('#createScenario')
-  console.log(scenarioSpec)
-
-  scenarioSpec.flow.forEach((flow) => {
-    Object.keys(flow).forEach((rpcName) => {
-      const args = flow[rpcName]
-      this.client[rpcName](args, (error, response) => {
-        if (error) {
-          console.error(error)
-        } else {
-          console.log(response)
-        }
-      })
-    })
-  })
-
   return executeScenario
 }
 
