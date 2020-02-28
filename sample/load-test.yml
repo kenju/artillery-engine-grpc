@@ -4,6 +4,8 @@ config:
     - duration: 60
       arrivalRate: 20
 scenarios:
+  - name: "Custom engine scenario"
+    engine: "grpc"
   - flow:
     - get:
         url: "/docs"

@@ -2,6 +2,8 @@
 
 Load test gRPC application with [Artillery.io](https://github.com/orchestrated-io/artillery-engine-lambd)
 
+https://www.npmjs.com/package/artillery-engine-grpc
+
 ## Usage
 
 ### Install the plugin
