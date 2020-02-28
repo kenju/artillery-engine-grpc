@@ -15,24 +15,61 @@ npm install -g artillery-engine-grpc
 
 ### Define your scenario
 
+#### .proto file
+
+```proto
+syntax = "proto3";
+
+package backend.services.v1;
+
+service HelloService {
+    rpc Hello (HelloRequest) returns (HelloResponse) {
+    }
+}
+
+message HelloRequest {
+    int32 id = 1;
+    string name = 2;
+}
+
+message HelloResponse {
+    string message = 1;
+}
+```
+
+#### scenario file
+
 ```yml
 # my-scenario.yml
+# @doc https://artillery.io/docs/script-reference/
 config:
-  target: 'https://localhost:8000'
+  target: 127.0.0.1:8080
   phases:
-    - duration: 60
-      arrivalRate: 20
+    - duration: 10 #sec
+      arrivalRate: 10
+      pause: 15 #sec
   engines:
-    grpc: {}
-  defaults:
-    protobufDefinition: ''
+    grpc:
+      protobufDefinition:
+        filepath: protobuf-definitions/backend/services/v1/hello.proto
+        package: backend.services.v1
+        service: HelloService
 
 scenarios:
-  name: 'test gRPC Application'
-  engine: 'grpc'
-  flow:
+  - name: test backend-service running at http://localhost:8000
+    engine: grpc
+    flow:
+    # list RPC names with its arguments
     - Hello:
-        foo: "var"
+        id: 1
+        name: Alice
+    - Hello:
+        id: 2
+        name: Bob
+    - Hello:
+        id: 3
+        name: Chris
+
 ```
 
 ### Run the scenario
