@@ -4,7 +4,6 @@ config:
   phases:
     - duration: 10 #sec
       arrivalRate: 10
-      pause: 15 #sec
   engines:
     grpc:
       protobufDefinition:
