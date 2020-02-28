@@ -9,15 +9,15 @@ function ArtilleryGRPCEngine(script, ee, helpers) {
   const { config } = this.script
   const { target, engines } = config
   const {
-    protobufDefinition,
+    filepath,
     service,
     package,
-  } = engines.grpc
+  } = engines.grpc.protobufDefinition
 
   // @return GrpcObject
   function loadPackageDefinition() {
     const packageDefinition = protoLoader.loadSync(
-      protobufDefinition,
+      filepath,
       {
         keepCase: true,
         longs: String,
@@ -33,7 +33,7 @@ function ArtilleryGRPCEngine(script, ee, helpers) {
     const grpcObject = loadPackageDefinition()
     // TODO: make it meta programming
     console.log('#initialized')
-    const client = new grpcObject.backend.services.v1.HelloService(
+    const client = new grpcObject.backend.services.v1[service](
       target,
       grpc.credentials.createInsecure(),
     )
