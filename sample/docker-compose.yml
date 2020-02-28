@@ -1,0 +1,10 @@
+version: '3.7'
+services:
+
+  backend-service:
+    build:
+      context: './backend-service'
+    expose:
+      - '8080'
+    ports:
+      - '8080:8080'
