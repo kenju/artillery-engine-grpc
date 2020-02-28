@@ -1,22 +1,25 @@
 config:
-  target: '127.0.0.1:8080'
+  target: 127.0.0.1:8080
   phases:
     - duration: 60
       arrivalRate: 20
   engines:
     grpc:
-      protobufDefinition: 'protobuf-definitions/backend/services/v1/hello.proto'
-      package: 'backend.services.v1'
+      protobufDefinition: protobuf-definitions/backend/services/v1/hello.proto
+      package: backend.services.v1
       service: HelloService
 
 scenarios:
-  - name: "test backend-service running at http://localhost:8000"
-    engine: "grpc"
+  - name: test backend-service running at http://localhost:8000
+    engine: grpc
     flow:
     # list RPC names with its arguments
     - Hello:
         id: 1
-        name: 'Alice'
+        name: Alice
     - Hello:
         id: 2
-        name: 'Bob'
+        name: Bob
+    - Hello:
+        id: 3
+        name: Chris
