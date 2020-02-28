@@ -4,6 +4,10 @@ Load test gRPC application with [Artillery.io](https://github.com/orchestrated-i
 
 https://www.npmjs.com/package/artillery-engine-grpc
 
+## NOTE ⚠️
+
+This library is still in alpha version. The configuration & YAML definition will be changed drastically in the stable version, so please be careful 🚧
+
 ## Usage
 
 ### Install the plugin
