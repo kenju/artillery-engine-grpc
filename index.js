@@ -59,11 +59,18 @@ ArtilleryGRPCEngine.prototype.step = function step(ops, ee) {
     };
   }
 
+  const startedAt = process.hrtime();
+
   // gRPC request
   return gRPCRequest = (context, callback) => {
     Object.keys(ops).map((rpcName) => {
       const args = ops[rpcName]
       this.client[rpcName](args, (error, response) => {
+        const endedAt = process.hrtime(startedAt);
+        const delta = (endedAt[0] * 1e9) + endedAt[1]; // NOTE: 1e9 means 1 * 10 to the 9th power, which is 1 billion (1000000000).
+        ee.emit('counter', 'engine.grpc.responses', 1);
+        ee.emit('histogram', 'engine.grpc.response_time', delta / 1e6); // NOTE: 1e6 means 1 * 10 to the 6th power, which is 1 million (1000000).
+
         if (error) {
           ee.emit('error', error)
           return callback(err, context);
