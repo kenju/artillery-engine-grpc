@@ -30,11 +30,24 @@ func backendCheck(conn *grpc.ClientConn) {
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 
+	backendHello(ctx, client)
+	backendBye(ctx, client)
+}
+
+func backendHello(ctx context.Context, client backend_service.HelloServiceClient) {
 	req := &backend_service.HelloRequest{}
 	message, err := client.Hello(ctx, req)
 	if err != nil {
 		panic(err)
 	}
-
 	log.Printf("backend.Hello() message=%+v\n", message)
+}
+
+func backendBye(ctx context.Context, client backend_service.HelloServiceClient) {
+	req := &backend_service.ByeRequest{}
+	message, err := client.Bye(ctx, req)
+	if err != nil {
+		panic(err)
+	}
+	log.Printf("backend.Bye() message=%+v\n", message)
 }

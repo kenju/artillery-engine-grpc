@@ -80,6 +80,19 @@ func (bs *backendServer) Hello(
 	}).Info("Hello()")
 
 	return &backend_services_v1.HelloResponse{
-		Message: fmt.Sprintf("%d", codes.OK),
+		Message: fmt.Sprintf("world (code=%d)", codes.OK),
+	}, nil
+}
+
+func (bs *backendServer) Bye(
+	ctx context.Context,
+	req *backend_services_v1.ByeRequest,
+) (*backend_services_v1.ByeResponse, error) {
+	log.WithFields(log.Fields{
+		"request": req,
+	}).Info("Bye()")
+
+	return &backend_services_v1.ByeResponse{
+		Message: fmt.Sprintf("bye (code=%d)", codes.OK),
 	}, nil
 }

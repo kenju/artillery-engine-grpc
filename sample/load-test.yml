@@ -26,3 +26,7 @@ scenarios:
     - Hello:
         id: 3
         name: Chris
+    - Bye:
+        id: 4
+    - Bye:
+        id: 5
