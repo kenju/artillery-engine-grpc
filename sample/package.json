@@ -1,0 +1,26 @@
+{
+  "name": "artillery-engine-grpc-sample",
+  "version": "0.0.1",
+  "description": "sample for artillery-engine-grpc",
+  "main": "index.js",
+  "scripts": {
+    "start": "artillery run load-test.yml"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/kenju/artillery-engine-grpc.git"
+  },
+  "keywords": [
+    "artillery",
+    "grpc"
+  ],
+  "author": "kenju",
+  "license": "MPL-2.0",
+  "bugs": {
+    "url": "https://github.com/kenju/artillery-engine-grpc/issues"
+  },
+  "homepage": "https://github.com/kenju/artillery-engine-grpc#readme",
+  "dependencies": {
+    "artillery": "^1.6.0-29"
+  }
+}
