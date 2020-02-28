@@ -29,11 +29,16 @@ function ArtilleryGRPCEngine(script, ee, helpers) {
     return grpc.loadPackageDefinition(packageDefinition)
   }
 
-  function initClient() {
+  function getService() {
     const grpcObject = loadPackageDefinition()
-    // TODO: make it meta programming
-    console.log('#initialized')
-    const client = new grpcObject.backend.services.v1[service](
+    const packages = package.split('.')
+    const services = packages.reduce((obj, p) => obj = obj[p], grpcObject)
+    return services[service]
+  }
+
+  function initClient() {
+    const service = getService()
+    const client = new service(
       target,
       grpc.credentials.createInsecure(),
     )
