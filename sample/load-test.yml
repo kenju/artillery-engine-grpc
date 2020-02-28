@@ -14,18 +14,19 @@ config:
 scenarios:
   - name: test backend-service running at http://localhost:8000
     engine: grpc
-    flow:
     # list RPC names with its arguments
-    - Hello:
-        id: 1
-        name: Alice
-    - Hello:
-        id: 2
-        name: Bob
-    - Hello:
-        id: 3
-        name: Chris
-    - Bye:
-        id: 4
-    - Bye:
-        id: 5
+    flow:
+      - log: 'scenario started'
+      - Hello:
+          id: 1
+          name: Alice
+      - Hello:
+          id: 2
+          name: Bob
+      - Hello:
+          id: 3
+          name: Chris
+      - Bye:
+          id: 4
+      - Bye:
+          id: 5
