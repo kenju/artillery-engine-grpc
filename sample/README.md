@@ -2,12 +2,13 @@
 
 ## Usage
 
-Run containers:
+### Setup
+
+At first, run containers:
 
 ```
 docker-compose pull
-docker-compose build
-docker-compose up
+docker-compose up --build
 ```
 
 Check the running containers:
@@ -40,4 +41,13 @@ containers' log:
 
 ```
 backend-service_1  | time="2019-09-28T05:38:18Z" level=info msg="Hello()" func="main.(*backendServer).Hello" file="/app/main.go:88" request=
+```
+
+### Load Test
+
+Run the load test with:
+
+```
+npm install
+npm run start
 ```

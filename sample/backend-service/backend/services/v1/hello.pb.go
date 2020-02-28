@@ -25,6 +25,8 @@ var _ = math.Inf
 const _ = proto.ProtoPackageIsVersion3 // please upgrade the proto package
 
 type HelloRequest struct {
+	Id                   int32    `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
+	Name                 string   `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`
 	XXX_NoUnkeyedLiteral struct{} `json:"-"`
 	XXX_unrecognized     []byte   `json:"-"`
 	XXX_sizecache        int32    `json:"-"`
@@ -55,14 +57,25 @@ func (m *HelloRequest) XXX_DiscardUnknown() {
 
 var xxx_messageInfo_HelloRequest proto.InternalMessageInfo
 
+func (m *HelloRequest) GetId() int32 {
+	if m != nil {
+		return m.Id
+	}
+	return 0
+}
+
+func (m *HelloRequest) GetName() string {
+	if m != nil {
+		return m.Name
+	}
+	return ""
+}
+
 type HelloResponse struct {
-	// Types that are valid to be assigned to Result:
-	//	*HelloResponse_Success_
-	//	*HelloResponse_Failure_
-	Result               isHelloResponse_Result `protobuf_oneof:"result"`
-	XXX_NoUnkeyedLiteral struct{}               `json:"-"`
-	XXX_unrecognized     []byte                 `json:"-"`
-	XXX_sizecache        int32                  `json:"-"`
+	Message              string   `protobuf:"bytes,1,opt,name=message,proto3" json:"message,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
 }
 
 func (m *HelloResponse) Reset()         { *m = HelloResponse{} }
@@ -90,133 +103,9 @@ func (m *HelloResponse) XXX_DiscardUnknown() {
 
 var xxx_messageInfo_HelloResponse proto.InternalMessageInfo
 
-type isHelloResponse_Result interface {
-	isHelloResponse_Result()
-}
-
-type HelloResponse_Success_ struct {
-	Success *HelloResponse_Success `protobuf:"bytes,1,opt,name=success,proto3,oneof"`
-}
-
-type HelloResponse_Failure_ struct {
-	Failure *HelloResponse_Failure `protobuf:"bytes,2,opt,name=failure,proto3,oneof"`
-}
-
-func (*HelloResponse_Success_) isHelloResponse_Result() {}
-
-func (*HelloResponse_Failure_) isHelloResponse_Result() {}
-
-func (m *HelloResponse) GetResult() isHelloResponse_Result {
+func (m *HelloResponse) GetMessage() string {
 	if m != nil {
-		return m.Result
-	}
-	return nil
-}
-
-func (m *HelloResponse) GetSuccess() *HelloResponse_Success {
-	if x, ok := m.GetResult().(*HelloResponse_Success_); ok {
-		return x.Success
-	}
-	return nil
-}
-
-func (m *HelloResponse) GetFailure() *HelloResponse_Failure {
-	if x, ok := m.GetResult().(*HelloResponse_Failure_); ok {
-		return x.Failure
-	}
-	return nil
-}
-
-// XXX_OneofWrappers is for the internal use of the proto package.
-func (*HelloResponse) XXX_OneofWrappers() []interface{} {
-	return []interface{}{
-		(*HelloResponse_Success_)(nil),
-		(*HelloResponse_Failure_)(nil),
-	}
-}
-
-type HelloResponse_Success struct {
-	StatusCode           string   `protobuf:"bytes,1,opt,name=status_code,json=statusCode,proto3" json:"status_code,omitempty"`
-	XXX_NoUnkeyedLiteral struct{} `json:"-"`
-	XXX_unrecognized     []byte   `json:"-"`
-	XXX_sizecache        int32    `json:"-"`
-}
-
-func (m *HelloResponse_Success) Reset()         { *m = HelloResponse_Success{} }
-func (m *HelloResponse_Success) String() string { return proto.CompactTextString(m) }
-func (*HelloResponse_Success) ProtoMessage()    {}
-func (*HelloResponse_Success) Descriptor() ([]byte, []int) {
-	return fileDescriptor_9cb2e5bedbde1b42, []int{1, 0}
-}
-
-func (m *HelloResponse_Success) XXX_Unmarshal(b []byte) error {
-	return xxx_messageInfo_HelloResponse_Success.Unmarshal(m, b)
-}
-func (m *HelloResponse_Success) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	return xxx_messageInfo_HelloResponse_Success.Marshal(b, m, deterministic)
-}
-func (m *HelloResponse_Success) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_HelloResponse_Success.Merge(m, src)
-}
-func (m *HelloResponse_Success) XXX_Size() int {
-	return xxx_messageInfo_HelloResponse_Success.Size(m)
-}
-func (m *HelloResponse_Success) XXX_DiscardUnknown() {
-	xxx_messageInfo_HelloResponse_Success.DiscardUnknown(m)
-}
-
-var xxx_messageInfo_HelloResponse_Success proto.InternalMessageInfo
-
-func (m *HelloResponse_Success) GetStatusCode() string {
-	if m != nil {
-		return m.StatusCode
-	}
-	return ""
-}
-
-type HelloResponse_Failure struct {
-	ErrorCode            string   `protobuf:"bytes,1,opt,name=error_code,json=errorCode,proto3" json:"error_code,omitempty"`
-	ErrorMessage         string   `protobuf:"bytes,2,opt,name=error_message,json=errorMessage,proto3" json:"error_message,omitempty"`
-	XXX_NoUnkeyedLiteral struct{} `json:"-"`
-	XXX_unrecognized     []byte   `json:"-"`
-	XXX_sizecache        int32    `json:"-"`
-}
-
-func (m *HelloResponse_Failure) Reset()         { *m = HelloResponse_Failure{} }
-func (m *HelloResponse_Failure) String() string { return proto.CompactTextString(m) }
-func (*HelloResponse_Failure) ProtoMessage()    {}
-func (*HelloResponse_Failure) Descriptor() ([]byte, []int) {
-	return fileDescriptor_9cb2e5bedbde1b42, []int{1, 1}
-}
-
-func (m *HelloResponse_Failure) XXX_Unmarshal(b []byte) error {
-	return xxx_messageInfo_HelloResponse_Failure.Unmarshal(m, b)
-}
-func (m *HelloResponse_Failure) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	return xxx_messageInfo_HelloResponse_Failure.Marshal(b, m, deterministic)
-}
-func (m *HelloResponse_Failure) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_HelloResponse_Failure.Merge(m, src)
-}
-func (m *HelloResponse_Failure) XXX_Size() int {
-	return xxx_messageInfo_HelloResponse_Failure.Size(m)
-}
-func (m *HelloResponse_Failure) XXX_DiscardUnknown() {
-	xxx_messageInfo_HelloResponse_Failure.DiscardUnknown(m)
-}
-
-var xxx_messageInfo_HelloResponse_Failure proto.InternalMessageInfo
-
-func (m *HelloResponse_Failure) GetErrorCode() string {
-	if m != nil {
-		return m.ErrorCode
-	}
-	return ""
-}
-
-func (m *HelloResponse_Failure) GetErrorMessage() string {
-	if m != nil {
-		return m.ErrorMessage
+		return m.Message
 	}
 	return ""
 }
@@ -224,31 +113,24 @@ func (m *HelloResponse_Failure) GetErrorMessage() string {
 func init() {
 	proto.RegisterType((*HelloRequest)(nil), "backend.services.v1.HelloRequest")
 	proto.RegisterType((*HelloResponse)(nil), "backend.services.v1.HelloResponse")
-	proto.RegisterType((*HelloResponse_Success)(nil), "backend.services.v1.HelloResponse.Success")
-	proto.RegisterType((*HelloResponse_Failure)(nil), "backend.services.v1.HelloResponse.Failure")
 }
 
 func init() { proto.RegisterFile("backend/services/v1/hello.proto", fileDescriptor_9cb2e5bedbde1b42) }
 
 var fileDescriptor_9cb2e5bedbde1b42 = []byte{
-	// 261 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x8c, 0x91, 0xcf, 0x4e, 0x02, 0x31,
-	0x10, 0xc6, 0x81, 0x44, 0xd6, 0x1d, 0xc0, 0x43, 0xbd, 0x90, 0x4d, 0x0c, 0xba, 0x5e, 0x0c, 0x87,
-	0x6e, 0xc0, 0x37, 0xd0, 0x84, 0x70, 0x21, 0x31, 0xcb, 0x03, 0x68, 0xe9, 0x8e, 0x4a, 0xac, 0x14,
-	0x3b, 0xed, 0x3e, 0x91, 0x0f, 0x6a, 0xfa, 0x87, 0x44, 0x13, 0xa3, 0x1c, 0xfb, 0xf5, 0xfb, 0x7e,
-	0xf9, 0x66, 0x06, 0x26, 0x1b, 0x21, 0xdf, 0x70, 0xd7, 0x54, 0x84, 0xa6, 0xdd, 0x4a, 0xa4, 0xaa,
-	0x9d, 0x55, 0xaf, 0xa8, 0x94, 0xe6, 0x7b, 0xa3, 0xad, 0x66, 0xe7, 0xc9, 0xc0, 0x0f, 0x06, 0xde,
-	0xce, 0xca, 0x33, 0x18, 0x2e, 0xbd, 0xa7, 0xc6, 0x0f, 0x87, 0x64, 0xcb, 0xcf, 0x1e, 0x8c, 0x92,
-	0x40, 0x7b, 0xbd, 0x23, 0x64, 0x0b, 0xc8, 0xc8, 0x49, 0x89, 0x44, 0xe3, 0xee, 0x65, 0xf7, 0x66,
-	0x30, 0x9f, 0xf2, 0x5f, 0x40, 0xfc, 0x47, 0x88, 0xaf, 0x63, 0x62, 0xd9, 0xa9, 0x0f, 0x61, 0xcf,
-	0x79, 0x16, 0x5b, 0xe5, 0x0c, 0x8e, 0x7b, 0x47, 0x73, 0x16, 0x31, 0xe1, 0x39, 0x29, 0x5c, 0x4c,
-	0x21, 0x4b, 0x74, 0x36, 0x81, 0x01, 0x59, 0x61, 0x1d, 0x3d, 0x4a, 0xdd, 0x60, 0xa8, 0x97, 0xd7,
-	0x10, 0xa5, 0x7b, 0xdd, 0x60, 0xb1, 0x82, 0x2c, 0x11, 0xd8, 0x05, 0x00, 0x1a, 0xa3, 0xcd, 0x77,
-	0x6b, 0x1e, 0x14, 0xef, 0x64, 0xd7, 0x30, 0x8a, 0xdf, 0xef, 0x48, 0x24, 0x5e, 0x62, 0xc7, 0xbc,
-	0x1e, 0x06, 0x71, 0x15, 0xb5, 0xbb, 0x53, 0xe8, 0x1b, 0x24, 0xa7, 0xec, 0xfc, 0x29, 0xad, 0x6d,
-	0x1d, 0x9b, 0xb3, 0x07, 0x38, 0x09, 0x6f, 0x76, 0xf5, 0xd7, 0x50, 0x61, 0xc5, 0x45, 0xf9, 0xff,
-	0xdc, 0x65, 0x67, 0xd3, 0x0f, 0x47, 0xbb, 0xfd, 0x0a, 0x00, 0x00, 0xff, 0xff, 0x79, 0x50, 0xce,
-	0x6d, 0xd7, 0x01, 0x00, 0x00,
+	// 178 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xe2, 0x92, 0x4f, 0x4a, 0x4c, 0xce,
+	0x4e, 0xcd, 0x4b, 0xd1, 0x2f, 0x4e, 0x2d, 0x2a, 0xcb, 0x4c, 0x4e, 0x2d, 0xd6, 0x2f, 0x33, 0xd4,
+	0xcf, 0x48, 0xcd, 0xc9, 0xc9, 0xd7, 0x2b, 0x28, 0xca, 0x2f, 0xc9, 0x17, 0x12, 0x86, 0x2a, 0xd0,
+	0x83, 0x29, 0xd0, 0x2b, 0x33, 0x54, 0x32, 0xe2, 0xe2, 0xf1, 0x00, 0xa9, 0x09, 0x4a, 0x2d, 0x2c,
+	0x4d, 0x2d, 0x2e, 0x11, 0xe2, 0xe3, 0x62, 0xca, 0x4c, 0x91, 0x60, 0x54, 0x60, 0xd4, 0x60, 0x0d,
+	0x62, 0xca, 0x4c, 0x11, 0x12, 0xe2, 0x62, 0xc9, 0x4b, 0xcc, 0x4d, 0x95, 0x60, 0x52, 0x60, 0xd4,
+	0xe0, 0x0c, 0x02, 0xb3, 0x95, 0x34, 0xb9, 0x78, 0xa1, 0x7a, 0x8a, 0x0b, 0xf2, 0xf3, 0x8a, 0x53,
+	0x85, 0x24, 0xb8, 0xd8, 0x73, 0x53, 0x8b, 0x8b, 0x13, 0xd3, 0x53, 0xc1, 0x3a, 0x39, 0x83, 0x60,
+	0x5c, 0xa3, 0x04, 0xa8, 0xf1, 0xc1, 0x10, 0x2b, 0x85, 0x02, 0xb8, 0x58, 0xc1, 0x7c, 0x21, 0x45,
+	0x3d, 0x2c, 0xae, 0xd1, 0x43, 0x76, 0x8a, 0x94, 0x12, 0x3e, 0x25, 0x10, 0x9b, 0x95, 0x18, 0x92,
+	0xd8, 0xc0, 0x9e, 0x33, 0x06, 0x04, 0x00, 0x00, 0xff, 0xff, 0x34, 0x06, 0x62, 0x49, 0xff, 0x00,
+	0x00, 0x00,
 }
 
 // Reference imports to suppress errors if they are not otherwise used.

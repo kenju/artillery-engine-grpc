@@ -8,20 +8,10 @@ service HelloService {
 }
 
 message HelloRequest {
+    int32 id = 1;
+    string name = 2;
 }
 
 message HelloResponse {
-    message Success {
-        string status_code = 1;
-    }
-
-    message Failure {
-        string error_code = 1;
-        string error_message = 2;
-    }
-
-    oneof result {
-        Success success = 1;
-        Failure failure = 2;
-    }
+    string message = 1;
 }

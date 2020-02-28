@@ -80,10 +80,6 @@ func (bs *backendServer) Hello(
 	}).Info("Hello()")
 
 	return &backend_services_v1.HelloResponse{
-		Result: &backend_services_v1.HelloResponse_Success_{
-			Success: &backend_services_v1.HelloResponse_Success{
-				StatusCode: fmt.Sprintf("%d", codes.OK),
-			},
-		},
+		Message: fmt.Sprintf("%d", codes.OK),
 	}, nil
 }
