@@ -1,4 +1,4 @@
-const A = require('async');
+const A = require('async')
 const grpc = require('grpc')
 const protoLoader = require('@grpc/proto-loader')
 
@@ -55,28 +55,41 @@ ArtilleryGRPCEngine.prototype.step = function step(ops, ee) {
   if (ops.log) {
     return (context, callback) => {
       logger(this.helpers.template(ops.log, context))
-      return process.nextTick(() => { callback(null, context); });
-    };
+      return process.nextTick(() => { callback(null, context) })
+    }
   }
 
-  const startedAt = process.hrtime();
+  const startedAt = process.hrtime()
+
+  function recordMetrics(startedAt, error) {
+    ee.emit('counter', 'engine.grpc.responses.total', 1)
+    if (error) {
+      ee.emit('counter', 'engine.grpc.responses.error', 1)
+    } else {
+      ee.emit('counter', 'engine.grpc.responses.success', 1)
+    }
+
+    /** @doc https://nodejs.org/api/process.html#process_process_hrtime_time */
+    const [diffSec, diffNanosec] = process.hrtime(startedAt)
+    const deltaNanosec = (diffSec * 1e9) + diffNanosec // NOTE: 1e9 means 1 * 10 to the 9th power, which is 1 billion (1000000000).
+    const deltaMillisec = deltaNanosec / 1e6 // NOTE: 1e6 means 1 * 10 to the 6th power, which is 1 million (1000000).
+    ee.emit('histogram', 'engine.grpc.response_time', deltaMillisec)
+  }
 
   // gRPC request
   return gRPCRequest = (context, callback) => {
     Object.keys(ops).map((rpcName) => {
       const args = ops[rpcName]
       this.client[rpcName](args, (error, response) => {
-        const endedAt = process.hrtime(startedAt);
-        const delta = (endedAt[0] * 1e9) + endedAt[1]; // NOTE: 1e9 means 1 * 10 to the 9th power, which is 1 billion (1000000000).
-        ee.emit('counter', 'engine.grpc.responses', 1);
-        ee.emit('histogram', 'engine.grpc.response_time', delta / 1e6); // NOTE: 1e6 means 1 * 10 to the 6th power, which is 1 million (1000000).
+
+        recordMetrics(startedAt, error)
 
         if (error) {
           ee.emit('error', error)
-          return callback(err, context);
+          return callback(err, context)
         } else {
           ee.emit('response', response)
-          return callback(null, context);
+          return callback(null, context)
         }
       })
     })
