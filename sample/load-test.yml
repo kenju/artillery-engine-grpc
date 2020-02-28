@@ -6,10 +6,17 @@ config:
   engines:
     grpc:
       protobufDefinition: 'protobuf-definitions/backend/services/v1/hello.proto'
+      package: 'backend.services.v1'
+      service: HelloService
 
 scenarios:
   - name: "test backend-service running at http://localhost:8000"
     engine: "grpc"
     flow:
-    - get:
-        url: "/docs"
+    # list RPC names with its arguments
+    - Hello:
+        id: 1
+        name: 'Alice'
+    - Hello:
+        id: 2
+        name: 'Bob'
