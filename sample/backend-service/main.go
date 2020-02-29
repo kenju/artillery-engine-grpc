@@ -10,6 +10,7 @@ import (
 
 	grpc_middleware "github.com/grpc-ecosystem/go-grpc-middleware"
 	grpc_recovery "github.com/grpc-ecosystem/go-grpc-middleware/recovery"
+	backend_resources_v1 "github.com/kenju/artillery-engine-grpc/sample/backend-service/backend/resources/v1"
 	backend_services_v1 "github.com/kenju/artillery-engine-grpc/sample/backend-service/backend/services/v1"
 	log "github.com/sirupsen/logrus"
 	"google.golang.org/grpc"
@@ -87,6 +88,10 @@ func (bs *backendServer) Hello(
 
 	return &backend_services_v1.HelloResponse{
 		Message: fmt.Sprintf("world (code=%d)", codes.OK),
+		User: &backend_resources_v1.User{
+			Id: int32(r),
+			Name: "foo",
+		},
 	}, nil
 }
 
