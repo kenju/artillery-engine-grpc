@@ -1,10 +1,11 @@
 name: Publish Node.js Package
 
 on:
-  # Release event: release
-  # https://help.github.com/en/actions/reference/events-that-trigger-workflows#release-event-release
-  release:
-    types: [created]
+  # Release event: push
+  # https://help.github.com/en/actions/reference/events-that-trigger-workflows#push-event-push
+  push:
+    tags:
+       - 'v*'
 
 jobs:
   publish-npm:
