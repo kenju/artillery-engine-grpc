@@ -23,7 +23,7 @@ config:
         arrays: false
         objects: false
         oneofs: true
-        includeDirs: []
+        includeDirs: [ './protobuf-definitions' ]
 
 scenarios:
   - name: test backend-service running at http://localhost:8000

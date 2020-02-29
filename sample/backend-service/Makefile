@@ -32,13 +32,14 @@ update:
 
 ## Compile protobuf definitions with grpc-go plugin
 protoc:
-	protoc \
+	protoc --go_out=plugins=grpc:. \
 		-I ../protobuf-definitions \
-		-I /usr/local/include \
-		-I ${GOPATH}/src \
-		-I ${GOPATH}/src/github.com/grpc-ecosystem/grpc-gateway/third_party/googleapis \
-		--go_out=plugins=grpc:. \
-		../protobuf-definitions/backend/services/v1/hello.proto
+		../protobuf-definitions/backend/services/*/*.proto
+	protoc --go_out=plugins=grpc:. \
+		-I ../protobuf-definitions \
+		../protobuf-definitions/backend/resources/*/*.proto
+  # HACK: change import path to make compile succeeded
+	sed -i '' -e 's/v1 "/v1 "github.com\/kenju\/artillery-engine-grpc\/sample\/backend-service\//' backend/services/v1/hello.pb.go
 
 ## Run gRPC server locally
 run-server:
