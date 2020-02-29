@@ -1,5 +1,7 @@
 # artillery-engine-grpc
 
+[![npm version](https://badge.fury.io/js/artillery-engine-grpc.svg)](https://badge.fury.io/js/artillery-engine-grpc) ![Publish Node.js Package](https://github.com/kenju/artillery-engine-grpc/workflows/Publish%20Node.js%20Package/badge.svg)
+
 Load test gRPC application with [Artillery.io](https://github.com/orchestrated-io/artillery-engine-lambd)
 
 https://www.npmjs.com/package/artillery-engine-grpc
@@ -93,6 +95,19 @@ scenarios:
 ```
 artillery run my-scenario.yml
 ```
+
+## Publish
+
+We use [GitHub Actions](https://help.github.com/en/actions) workflow to publish packages to https://www.npmjs.com/package/artillery-engine-grpc.
+
+Create `v*` tags and push to origin/master.
+
+```
+git tag v0.0.x
+git push origin --tags
+```
+
+See `.github/workflows/npm-publish.yml` for more details.
 
 ## References
 
