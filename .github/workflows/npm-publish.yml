@@ -4,12 +4,10 @@ on:
   # Release event: release
   # https://help.github.com/en/actions/reference/events-that-trigger-workflows#release-event-release
   release:
-    types:
-      - created
+    types: [created]
 
 jobs:
   publish-npm:
-    needs: build
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
