@@ -82,14 +82,6 @@ scenarios:
 artillery run my-scenario.yml
 ```
 
-## Development
-
-### Use `sample/` with local source code
-
-Use [`npm link`](https://docs.npmjs.com/cli/link).
-
-e.g. https://github.com/artilleryio/artillery/issues/508#issuecomment-408361851
-
 ## References
 
 ### Other Engines
