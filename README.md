@@ -96,29 +96,6 @@ scenarios:
 artillery run my-scenario.yml
 ```
 
-## Publish
-
-We use [GitHub Actions](https://help.github.com/en/actions) workflow to publish packages to https://www.npmjs.com/package/artillery-engine-grpc.
-
-Create `v*` tags and push to origin/master.
-
-```
-git tag v0.0.x
-git push origin --tags
-```
-
-See `.github/workflows/npm-publish.yml` for more details.
-
-## References
-
-### Other Engines
-
-service | source code
----|---
-AWS Kinesis | https://github.com/artilleryio/artillery-engine-kinesis
-AWS Lambda | https://github.com/orchestrated-io/artillery-engine-lambda
-Apache Kafka | https://github.com/flentini/artillery-engine-kafka
-
 ## License
 
 [MPL-2.0](https://www.mozilla.org/en-US/MPL/2.0/)
