@@ -5,14 +5,29 @@ config:
     - duration: 10 #sec
       arrivalRate: 1
   engines:
+    # artillery-engine-grpc's specific configuration
     grpc:
+      # specify .proto file basic information
       protobufDefinition:
         filepath: protobuf-definitions/backend/services/v1/hello.proto
         package: backend.services.v1
         service: HelloService
+      # can overrider @grpc/proto-loader's configuration
+      # https://www.npmjs.com/package/@grpc/proto-loader
+      protoLoaderConfig:
+        keepCase: true
+        longs: String
+        enums: String
+        bytes: Buffer
+        defaults: false
+        arrays: false
+        objects: false
+        oneofs: true
+        includeDirs: []
 
 scenarios:
   - name: test backend-service running at http://localhost:8000
+    # specify engine's name here
     engine: grpc
     # list RPC names with its arguments
     flow:

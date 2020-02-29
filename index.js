@@ -17,19 +17,18 @@ function ArtilleryGRPCEngine(script, ee, helpers) {
 
 ArtilleryGRPCEngine.prototype.initGRPCClient = function initClient(config) {
   const { target, engines } = config
-  const { filepath, service, package, } = engines.grpc.protobufDefinition
+
+  const {
+    filepath,
+    service,
+    package,
+  } = engines.grpc.protobufDefinition
 
   // @return GrpcObject
   function loadPackageDefinition() {
     const packageDefinition = protoLoader.loadSync(
       filepath,
-      {
-        keepCase: true,
-        longs: String,
-        enums: String,
-        defaults: true,
-        oneofs: true,
-      },
+      engines.grpc.protoLoaderConfig || {},
     )
     return grpc.loadPackageDefinition(packageDefinition)
   }

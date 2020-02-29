@@ -58,6 +58,18 @@ config:
         filepath: protobuf-definitions/backend/services/v1/hello.proto
         package: backend.services.v1
         service: HelloService
+      # can overrider @grpc/proto-loader's configuration
+      # https://www.npmjs.com/package/@grpc/proto-loader
+      protoLoaderConfig:
+        keepCase: true
+        longs: String
+        enums: String
+        bytes: Buffer
+        defaults: false
+        arrays: false
+        objects: false
+        oneofs: true
+        includeDirs: []
 
 scenarios:
   - name: test backend-service running at http://localhost:8000
