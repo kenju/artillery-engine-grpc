@@ -2,7 +2,7 @@
 
 [![npm version](https://badge.fury.io/js/artillery-engine-grpc.svg)](https://badge.fury.io/js/artillery-engine-grpc) ![Publish Node.js Package](https://github.com/kenju/artillery-engine-grpc/workflows/Publish%20Node.js%20Package/badge.svg)
 
-Load test gRPC application with [Artillery.io](https://github.com/orchestrated-io/artillery-engine-lambd)
+Load test gRPC application with [Artillery.io](https://artillery.io/)
 
 ## Documentation
 

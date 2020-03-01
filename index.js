@@ -1,6 +1,7 @@
 const A = require('async')
 const grpc = require('grpc')
 const protoLoader = require('@grpc/proto-loader')
+const debug = require('debug')('engine:grpc')
 
 const { log: logger } = console
 
@@ -10,13 +11,20 @@ function ArtilleryGRPCEngine(script, ee, helpers) {
   this.helpers = helpers
 
   const { config } = this.script
-  this.client = this.initGRPCClient(config)
+  debug(config)
+
+  // Hash<K, V>: K=target, V=grPC client
+  this.serviceClient = this.loadServiceClient(config)
+  const client = this.initGRPCClient(config.target)
+  this.clientHash = {
+    [config.target]: client,
+  }
 
   return this
 }
 
-ArtilleryGRPCEngine.prototype.initGRPCClient = function initClient(config) {
-  const { target, engines } = config
+ArtilleryGRPCEngine.prototype.loadServiceClient = function initClient(config) {
+  const { engines } = config
 
   const {
     filepath,
@@ -33,24 +41,23 @@ ArtilleryGRPCEngine.prototype.initGRPCClient = function initClient(config) {
     return grpc.loadPackageDefinition(packageDefinition)
   }
 
-  function getServiceClient() {
-    const grpcObject = loadPackageDefinition()
-    const packages = package.split('.')
-    const services = packages.reduce((obj, p) => obj = obj[p], grpcObject)
-    return services[service]
-  }
+  const grpcObject = loadPackageDefinition()
+  const packages = package.split('.')
+  const services = packages.reduce((obj, p) => obj = obj[p], grpcObject)
+  return services[service]
+}
 
-  const serviceClient = getServiceClient()
-  return new serviceClient(target, grpc.credentials.createInsecure())
+ArtilleryGRPCEngine.prototype.initGRPCClient = function initClient(target) {
+  return new this.serviceClient(target, grpc.credentials.createInsecure())
 }
 
 ArtilleryGRPCEngine.prototype.createScenario = function createScenario(scenarioSpec, ee) {
-  const tasks = scenarioSpec.flow.map((ops) => this.step(ops, ee))
+  const tasks = scenarioSpec.flow.map((ops) => this.step(ops, ee, scenarioSpec))
 
   return this.compile(tasks, scenarioSpec.flow, ee)
 }
 
-ArtilleryGRPCEngine.prototype.step = function step(ops, ee) {
+ArtilleryGRPCEngine.prototype.step = function step(ops, ee, scenarioSpec) {
   if (ops.log) {
     return (context, callback) => {
       logger(this.helpers.template(ops.log, context))
@@ -75,17 +82,36 @@ ArtilleryGRPCEngine.prototype.step = function step(ops, ee) {
     ee.emit('histogram', 'engine.grpc.response_time', deltaMillisec)
   }
 
+  function beforeRequestHook(context, config, scenarioSpec) {
+    if (!scenarioSpec.beforeRequest) { return; }
+
+    // call beforeRequest hooks
+    Array.from(scenarioSpec.beforeRequest).forEach((functionName) => {
+      const f = config.processor[functionName]
+      if (f) { f(context) }
+    })
+  }
+
   // gRPC request
   return gRPCRequest = (context, callback) => {
+    beforeRequestHook(context, this.script.config, scenarioSpec)
+
+    const target = context.vars.target
+    let client = this.clientHash[target]
+    if (!client) {
+      client = this.initGRPCClient(target)
+      this.clientHash[target] = client // memoize
+    }
+
     Object.keys(ops).map((rpcName) => {
       const args = ops[rpcName]
-      this.client[rpcName](args, (error, response) => {
+      client[rpcName](args, (error, response) => {
 
         recordMetrics(startedAt, error)
 
         if (error) {
           ee.emit('error', error)
-          return callback(err, context)
+          return callback(error, context)
         } else {
           ee.emit('response', response)
           return callback(null, context)
