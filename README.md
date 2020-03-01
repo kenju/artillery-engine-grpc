@@ -4,11 +4,15 @@
 
 Load test gRPC application with [Artillery.io](https://github.com/orchestrated-io/artillery-engine-lambd)
 
-See https://kenju.github.io/artillery-engine-grpc/ for more details (e.g. development guide)
+## Documentation
 
-## NOTE ⚠️
+For users:
 
-This library is still in alpha version. The configuration & YAML definition will be changed drastically in the stable version, so please be careful 🚧
+- [Documentation](https://kenju.github.io/artillery-engine-grpc/documentation)
+
+For developers:
+
+- [Development Guide](https://kenju.github.io/artillery-engine-grpc/development_guide)
 
 ## Usage
 
