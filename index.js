@@ -48,7 +48,8 @@ ArtilleryGRPCEngine.prototype.loadServiceClient = function initClient(config) {
 }
 
 ArtilleryGRPCEngine.prototype.initGRPCClient = function initClient(target) {
-  return new this.serviceClient(target, grpc.credentials.createInsecure())
+  const { channelOpts } = this.script.config.engines.grpc
+  return new this.serviceClient(target, grpc.credentials.createInsecure(), channelOpts)
 }
 
 ArtilleryGRPCEngine.prototype.createScenario = function createScenario(scenarioSpec, ee) {
