@@ -4,6 +4,20 @@
 
 ### Setup
 
+Link `artillery-engine-grpc` for this sample repository's package.json using [`npm link`](https://docs.npmjs.com/cli/link.html)
+
+```
+# create symlink at first
+cd artillery-engine-grpc/
+npm link
+
+# link created symlink to this sample repository
+cd sample/
+npm link artillery-engine-grpc
+```
+
+### Load Test
+
 At first, run containers:
 
 ```
@@ -49,5 +63,5 @@ Run the load test with:
 
 ```
 npm install
-npm run start
+DEBUG=engine:grpc npm run start
 ```
