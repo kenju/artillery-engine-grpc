@@ -113,7 +113,6 @@ ArtilleryGRPCEngine.prototype.step = function step(ops, ee, scenarioSpec) {
           ee.emit('error', error)
           return callback(error, context)
         } else {
-          ee.emit('response', response)
           return callback(null, context)
         }
       })
