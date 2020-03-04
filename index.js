@@ -55,8 +55,19 @@ ArtilleryGRPCEngine.prototype.loadServiceClient = function initClient(config) {
 
 ArtilleryGRPCEngine.prototype.initGRPCClient = function initClient(target) {
   const { channelOpts } = this.script.config.engines.grpc
-  debug('channelOpts=%O', channelOpts)
-  return new this.serviceClient(target, grpc.credentials.createInsecure(), channelOpts)
+  /**
+   * Filter out invalid channelOpts for gRPC client.
+   * Channel third argument must be "an object with string keys and integer or string values"
+   *
+   * @see https://github.com/kenju/artillery-engine-grpc/pull/8/files#issuecomment-594329331
+   */
+  const opts = Object.keys(channelOpts).reduce((acc, k) => {
+    if (typeof channelOpts[k] === "string" || typeof channelOpts[k] === "number") {
+      acc[k] = channelOpts[k]
+    }
+    return acc
+  }, {})
+  return new this.serviceClient(target, grpc.credentials.createInsecure(), opts)
 }
 
 ArtilleryGRPCEngine.prototype.createScenario = function createScenario(scenarioSpec, ee) {
