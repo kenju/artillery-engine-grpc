@@ -11,7 +11,7 @@ function ArtilleryGRPCEngine(script, ee, helpers) {
   this.helpers = helpers
 
   const { config } = this.script
-  debug(config)
+  debug('script.config=%O', config)
 
   // Hash<K, V>: K=target, V=grPC client
   this.serviceClient = this.loadServiceClient(config)
@@ -24,19 +24,25 @@ function ArtilleryGRPCEngine(script, ee, helpers) {
 }
 
 ArtilleryGRPCEngine.prototype.loadServiceClient = function initClient(config) {
-  const { engines } = config
+  const {
+    protobufDefinition,
+    protoLoaderConfig,
+  } = config.engines.grpc
+
+  debug('protobufDefinition=%O', protobufDefinition)
+  debug('protoLoaderConfig=%O', protoLoaderConfig)
 
   const {
     filepath,
     service,
     package,
-  } = engines.grpc.protobufDefinition
+  } = protobufDefinition
 
   // @return GrpcObject
   function loadPackageDefinition() {
     const packageDefinition = protoLoader.loadSync(
       filepath,
-      engines.grpc.protoLoaderConfig || {},
+      protoLoaderConfig || {},
     )
     return grpc.loadPackageDefinition(packageDefinition)
   }
@@ -49,6 +55,7 @@ ArtilleryGRPCEngine.prototype.loadServiceClient = function initClient(config) {
 
 ArtilleryGRPCEngine.prototype.initGRPCClient = function initClient(target) {
   const { channelOpts } = this.script.config.engines.grpc
+  debug('channelOpts=%O', channelOpts)
   return new this.serviceClient(target, grpc.credentials.createInsecure(), channelOpts)
 }
 
