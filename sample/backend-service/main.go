@@ -79,7 +79,8 @@ func (bs *backendServer) Hello(
 	req *backend_services_v1.HelloRequest,
 ) (*backend_services_v1.HelloResponse, error) {
 	log.WithFields(log.Fields{
-		"request": req,
+		"request":  req,
+		"platform": req.Platform,
 	}).Info("Hello()")
 
 	// NOTE: sleep for rondom milliseconds for benchmarking
@@ -89,7 +90,7 @@ func (bs *backendServer) Hello(
 	return &backend_services_v1.HelloResponse{
 		Message: fmt.Sprintf("world (code=%d)", codes.OK),
 		User: &backend_resources_v1.User{
-			Id: int32(r),
+			Id:   int32(r),
 			Name: "foo",
 		},
 	}, nil

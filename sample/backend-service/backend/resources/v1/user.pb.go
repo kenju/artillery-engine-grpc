@@ -71,9 +71,7 @@ func init() {
 	proto.RegisterType((*User)(nil), "backend.resources.v1.User")
 }
 
-func init() {
-	proto.RegisterFile("backend/resources/v1/user.proto", fileDescriptor_cc6fc625737a5154)
-}
+func init() { proto.RegisterFile("backend/resources/v1/user.proto", fileDescriptor_cc6fc625737a5154) }
 
 var fileDescriptor_cc6fc625737a5154 = []byte{
 	// 113 bytes of a gzipped FileDescriptorProto

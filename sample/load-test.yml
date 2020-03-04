@@ -42,12 +42,15 @@ scenarios:
       - Hello:
           id: 1
           name: Alice
+          platform: ANDROID # specifiy enum value with large capitals
       - Hello:
           id: 2
           name: Bob
+          platform: 1 # ="IOS" you can pass enum value as well
       - Hello:
           id: 3
           name: Chris
+          platform: WEB # specifiy enum value with large capitals
       - Bye:
           id: 4
       - Bye:
