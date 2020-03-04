@@ -11,7 +11,7 @@ function ArtilleryGRPCEngine(script, ee, helpers) {
   this.helpers = helpers
 
   const { config } = this.script
-  debug(config)
+  debug('script.config=%O', config)
 
   // Hash<K, V>: K=target, V=grPC client
   this.serviceClient = this.loadServiceClient(config)
@@ -24,19 +24,25 @@ function ArtilleryGRPCEngine(script, ee, helpers) {
 }
 
 ArtilleryGRPCEngine.prototype.loadServiceClient = function initClient(config) {
-  const { engines } = config
+  const {
+    protobufDefinition,
+    protoLoaderConfig,
+  } = config.engines.grpc
+
+  debug('protobufDefinition=%O', protobufDefinition)
+  debug('protoLoaderConfig=%O', protoLoaderConfig)
 
   const {
     filepath,
     service,
     package,
-  } = engines.grpc.protobufDefinition
+  } = protobufDefinition
 
   // @return GrpcObject
   function loadPackageDefinition() {
     const packageDefinition = protoLoader.loadSync(
       filepath,
-      engines.grpc.protoLoaderConfig || {},
+      protoLoaderConfig || {},
     )
     return grpc.loadPackageDefinition(packageDefinition)
   }
@@ -48,7 +54,20 @@ ArtilleryGRPCEngine.prototype.loadServiceClient = function initClient(config) {
 }
 
 ArtilleryGRPCEngine.prototype.initGRPCClient = function initClient(target) {
-  return new this.serviceClient(target, grpc.credentials.createInsecure())
+  const { channelOpts } = this.script.config.engines.grpc
+  /**
+   * Filter out invalid channelOpts for gRPC client.
+   * Channel third argument must be "an object with string keys and integer or string values"
+   *
+   * @see https://github.com/kenju/artillery-engine-grpc/pull/8/files#issuecomment-594329331
+   */
+  const opts = Object.keys(channelOpts).reduce((acc, k) => {
+    if (typeof channelOpts[k] === "string" || typeof channelOpts[k] === "number") {
+      acc[k] = channelOpts[k]
+    }
+    return acc
+  }, {})
+  return new this.serviceClient(target, grpc.credentials.createInsecure(), opts)
 }
 
 ArtilleryGRPCEngine.prototype.createScenario = function createScenario(scenarioSpec, ee) {

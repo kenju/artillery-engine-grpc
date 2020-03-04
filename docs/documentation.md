@@ -53,6 +53,18 @@ grpc:
     service: HelloService
 ```
 
+### `config.engines.grpc.channelOpts` (optional)
+
+You can set [grpc-ChannelOptions](https://grpc.github.io/grpc/node/grpc.Channel.html).
+
+The available options are listed at https://grpc.github.io/grpc/core/group__grpc__arg__keys.html
+
+```yaml
+grpc:
+  channelOpts:
+    grpc.client_idle_timeout_ms: 1000
+```
+
 ### `config.engines.grpc.protoLoaderConfig` (optional)
 
 artillery-engine-grpc use [@grpc/proto-loader](https://www.npmjs.com/package/@grpc/proto-loader) for loading .proto files. You can pass its configuration via `protoLoaderConfig` attributes.
