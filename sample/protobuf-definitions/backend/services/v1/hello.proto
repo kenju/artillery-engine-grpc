@@ -1,5 +1,6 @@
 syntax = "proto3";
 
+import "backend/resources/v1/platform.proto";
 import "backend/resources/v1/user.proto";
 
 package backend.services.v1;
@@ -12,6 +13,7 @@ service HelloService {
 message HelloRequest {
     int32 id = 1;
     string name = 2;
+    backend.resources.v1.Platform platform = 3;
 }
 
 message HelloResponse {

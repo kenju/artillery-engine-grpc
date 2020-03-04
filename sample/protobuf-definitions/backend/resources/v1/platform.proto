@@ -1,0 +1,9 @@
+syntax = "proto3";
+
+package backend.resources.v1;
+
+enum Platform {
+  Web = 0;
+  IOS = 1;
+  ANDROID = 2;
+}
