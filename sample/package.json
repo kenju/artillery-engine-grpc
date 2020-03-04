@@ -1,6 +1,6 @@
 {
   "name": "artillery-engine-grpc-sample",
-  "version": "0.0.6",
+  "version": "0.0.1",
   "description": "sample for artillery-engine-grpc",
   "main": "index.js",
   "scripts": {
