@@ -42,12 +42,15 @@ scenarios:
       - Hello:
           id: 1
           name: Alice
+          platform: IOS
       - Hello:
           id: 2
           name: Bob
+          platform: WEB
       - Hello:
           id: 3
           name: Chris
+          platform: ANDROID # specifiy enum value with large capitals
       - Bye:
           id: 4
       - Bye:
