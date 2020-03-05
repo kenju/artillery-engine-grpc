@@ -13,10 +13,12 @@ import (
 	backend_resources_v1 "github.com/kenju/artillery-engine-grpc/sample/backend-service/backend/resources/v1"
 	backend_services_v1 "github.com/kenju/artillery-engine-grpc/sample/backend-service/backend/services/v1"
 	log "github.com/sirupsen/logrus"
+	"google.golang.org/genproto/googleapis/rpc/errdetails"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/metadata"
 	"google.golang.org/grpc/reflection"
+	"google.golang.org/grpc/status"
 )
 
 const (
@@ -108,6 +110,7 @@ func (bs *backendServer) Hello(
 	}, nil
 }
 
+// Bye intentionally return errors with status code
 func (bs *backendServer) Bye(
 	ctx context.Context,
 	req *backend_services_v1.ByeRequest,
@@ -122,7 +125,28 @@ func (bs *backendServer) Bye(
 	r := rand.Intn(500) // up to 500 msec
 	time.Sleep(time.Duration(r) * time.Millisecond)
 
-	return &backend_services_v1.ByeResponse{
-		Message: fmt.Sprintf("bye (code=%d)", codes.OK),
-	}, nil
+	// return &backend_services_v1.ByeResponse{
+	// 	Message: fmt.Sprintf("bye (code=%d)", codes.OK),
+	// }, nil
+	return nil, buildErrNotFound()
+}
+
+const errdetailsDomain = "backend_service"
+
+func buildErrNotFound() error {
+	st := status.New(codes.NotFound, "NOT_FOUND")
+	st, err := st.WithDetails(
+		&errdetails.BadRequest{
+			FieldViolations: []*errdetails.BadRequest_FieldViolation{
+				&errdetails.BadRequest_FieldViolation{
+					Field:       "Message",
+					Description: fmt.Sprintf("NOT_FOUND error happened"),
+				},
+			},
+		},
+	)
+	if err != nil {
+		return err
+	}
+	return st.Err()
 }
