@@ -117,12 +117,14 @@ ArtilleryGRPCEngine.prototype.step = function step(ops, ee, scenarioSpec) {
 
   const startedAt = process.hrtime()
 
-  function recordMetrics(startedAt, error) {
+  function recordMetrics(startedAt, error, response) {
     ee.emit('counter', 'engine.grpc.responses.total', 1)
     if (error) {
       ee.emit('counter', 'engine.grpc.responses.error', 1)
+      ee.emit('counter', 'engine.grpc.codes.' + error.code, 1);
     } else {
       ee.emit('counter', 'engine.grpc.responses.success', 1)
+      ee.emit('counter', 'engine.grpc.codes.' + grpc.status.OK, 1);
     }
 
     /** @doc https://nodejs.org/api/process.html#process_process_hrtime_time */
@@ -159,7 +161,7 @@ ArtilleryGRPCEngine.prototype.step = function step(ops, ee, scenarioSpec) {
       /** @doc https://grpc.github.io/grpc/node/grpc.Client.html */
       client[rpcName](args, grpcMetadata, (error, response) => {
 
-        recordMetrics(startedAt, error)
+        recordMetrics(startedAt, error, response)
 
         if (error) {
           ee.emit('error', error)
