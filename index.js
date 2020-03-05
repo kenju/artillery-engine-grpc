@@ -14,7 +14,7 @@ function ArtilleryGRPCEngine(script, ee, helpers) {
   debug('script.config=%O', config)
 
   // Hash<K, V>: K=target, V=grPC client
-  this.serviceClient = this.loadServiceClient(config)
+  this.serviceClient = this.loadServiceClient()
   const client = this.initGRPCClient(config.target)
   this.clientHash = {
     [config.target]: client,
@@ -23,11 +23,11 @@ function ArtilleryGRPCEngine(script, ee, helpers) {
   return this
 }
 
-ArtilleryGRPCEngine.prototype.loadServiceClient = function initClient(config) {
+ArtilleryGRPCEngine.prototype.loadServiceClient = function () {
   const {
     protobufDefinition,
     protoLoaderConfig,
-  } = config.engines.grpc
+  } = this.getEngineConfig()
 
   debug('protobufDefinition=%O', protobufDefinition)
   debug('protoLoaderConfig=%O', protoLoaderConfig)
@@ -53,8 +53,27 @@ ArtilleryGRPCEngine.prototype.loadServiceClient = function initClient(config) {
   return services[service]
 }
 
-ArtilleryGRPCEngine.prototype.initGRPCClient = function initClient(target) {
-  const { channelOpts } = this.script.config.engines.grpc
+/**
+ * Load test YAML configuration defined at: <config.engines.grpc>
+ */
+ArtilleryGRPCEngine.prototype.getEngineConfig = function () {
+  const {
+    channelOpts,
+    protobufDefinition,
+    protoLoaderConfig,
+    metadata,
+  } = this.script.config.engines.grpc
+
+  return {
+    channelOpts,
+    protobufDefinition,
+    protoLoaderConfig,
+    metadata,
+  }
+}
+
+ArtilleryGRPCEngine.prototype.initGRPCClient = function (target) {
+  const { channelOpts } = this.getEngineConfig()
   /**
    * Filter out invalid channelOpts for gRPC client.
    * Channel third argument must be "an object with string keys and integer or string values"
@@ -70,10 +89,22 @@ ArtilleryGRPCEngine.prototype.initGRPCClient = function initClient(target) {
   return new this.serviceClient(target, grpc.credentials.createInsecure(), opts)
 }
 
-ArtilleryGRPCEngine.prototype.createScenario = function createScenario(scenarioSpec, ee) {
+ArtilleryGRPCEngine.prototype.createScenario = function (scenarioSpec, ee) {
   const tasks = scenarioSpec.flow.map((ops) => this.step(ops, ee, scenarioSpec))
 
   return this.compile(tasks, scenarioSpec.flow, ee)
+}
+
+/**
+ * @doc https://grpc.github.io/grpc/node/grpc.Metadata.html
+ **/
+ArtilleryGRPCEngine.prototype.buildGRPCMetadata = function () {
+  const { metadata } = this.getEngineConfig()
+  const grpcMetadata = new grpc.Metadata();
+  Object.entries(metadata).forEach(([k, v]) => {
+    grpcMetadata.add(k, v)
+  })
+  return grpcMetadata
 }
 
 ArtilleryGRPCEngine.prototype.step = function step(ops, ee, scenarioSpec) {
@@ -121,10 +152,12 @@ ArtilleryGRPCEngine.prototype.step = function step(ops, ee, scenarioSpec) {
       client = this.initGRPCClient(target)
       this.clientHash[target] = client // memoize
     }
+    const grpcMetadata = this.buildGRPCMetadata()
 
     Object.keys(ops).map((rpcName) => {
       const args = ops[rpcName]
-      client[rpcName](args, (error, response) => {
+      /** @doc https://grpc.github.io/grpc/node/grpc.Client.html */
+      client[rpcName](args, grpcMetadata, (error, response) => {
 
         recordMetrics(startedAt, error)
 
@@ -139,7 +172,7 @@ ArtilleryGRPCEngine.prototype.step = function step(ops, ee, scenarioSpec) {
   }
 }
 
-ArtilleryGRPCEngine.prototype.compile = function compile(tasks, scenarioSpec, ee) {
+ArtilleryGRPCEngine.prototype.compile = function (tasks, scenarioSpec, ee) {
   return function scenario(initialContext, callback) {
     const init = function init(next) {
       ee.emit('started')

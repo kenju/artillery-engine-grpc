@@ -8,6 +8,7 @@ import (
 	backend_resource "github.com/kenju/artillery-engine-grpc/sample/backend-service/backend/resources/v1"
 	backend_service "github.com/kenju/artillery-engine-grpc/sample/backend-service/backend/services/v1"
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/metadata"
 )
 
 func main() {
@@ -41,6 +42,11 @@ func backendHello(ctx context.Context, client backend_service.HelloServiceClient
 		Name:     "Foo",
 		Platform: backend_resource.Platform_Web,
 	}
+
+	ctx = metadata.AppendToOutgoingContext(ctx,
+		"user-id", "u111",
+	)
+
 	message, err := client.Hello(ctx, req)
 	if err != nil {
 		panic(err)

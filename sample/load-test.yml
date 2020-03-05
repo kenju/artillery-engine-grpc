@@ -30,6 +30,8 @@ config:
         objects: false
         oneofs: true
         includeDirs: [ './protobuf-definitions' ]
+      metadata:
+        "user-id": u123
 
 scenarios:
   - name: test backend-service running at http://localhost:8000

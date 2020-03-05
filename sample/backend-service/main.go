@@ -15,6 +15,7 @@ import (
 	log "github.com/sirupsen/logrus"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/metadata"
 	"google.golang.org/grpc/reflection"
 )
 
@@ -74,6 +75,15 @@ func newBackendServer() *backendServer {
 	return &backendServer{}
 }
 
+func logMetadata(ctx context.Context) {
+	md, ok := metadata.FromIncomingContext(ctx)
+	if ok {
+		log.WithFields(log.Fields{
+			"metadata": md,
+		}).Info("metadata")
+	}
+}
+
 func (bs *backendServer) Hello(
 	ctx context.Context,
 	req *backend_services_v1.HelloRequest,
@@ -82,6 +92,8 @@ func (bs *backendServer) Hello(
 		"request":  req,
 		"platform": req.Platform,
 	}).Info("Hello()")
+
+	logMetadata(ctx)
 
 	// NOTE: sleep for rondom milliseconds for benchmarking
 	r := rand.Intn(100) // up to 100 msec
@@ -103,6 +115,8 @@ func (bs *backendServer) Bye(
 	log.WithFields(log.Fields{
 		"request": req,
 	}).Info("Bye()")
+
+	logMetadata(ctx)
 
 	// NOTE: sleep for rondom milliseconds for benchmarking
 	r := rand.Intn(500) // up to 500 msec
