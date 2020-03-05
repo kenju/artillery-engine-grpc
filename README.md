@@ -50,22 +50,20 @@ message HelloResponse {
 #### scenario file
 
 ```yml
-# my-scenario.yml
-# @doc https://artillery.io/docs/script-reference/
 config:
   target: 127.0.0.1:8080
   phases:
-    - duration: 10 #sec
+    - duration: 10
       arrivalRate: 10
-      pause: 15 #sec
+      pause: 15
   engines:
     grpc:
+      channelOpts:
+        grpc.client_idle_timeout_ms: 1000
       protobufDefinition:
         filepath: protobuf-definitions/backend/services/v1/hello.proto
         package: backend.services.v1
         service: HelloService
-      # can overrider @grpc/proto-loader's configuration
-      # https://www.npmjs.com/package/@grpc/proto-loader
       protoLoaderConfig:
         keepCase: true
         longs: String
@@ -76,6 +74,8 @@ config:
         objects: false
         oneofs: true
         includeDirs: []
+      metadata:
+        "user-id": u123
 
 scenarios:
   - name: test backend-service running at http://localhost:8000
