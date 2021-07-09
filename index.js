@@ -157,7 +157,7 @@ ArtilleryGRPCEngine.prototype.step = function step(ops, ee, scenarioSpec) {
     const grpcMetadata = this.buildGRPCMetadata()
 
     Object.keys(ops).map((rpcName) => {
-      const args = ops[rpcName]
+      const args = this.helpers.template(ops[rpcName], context)
       /** @doc https://grpc.github.io/grpc/node/grpc.Client.html */
       client[rpcName](args, grpcMetadata, (error, response) => {
 
