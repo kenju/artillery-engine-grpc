@@ -1,6 +1,6 @@
 {
   "name": "artillery-engine-grpc",
-  "version": "0.0.7",
+  "version": "0.0.9",
   "description": "Load test your gRPC application with Artillery.io",
   "main": "index.js",
   "scripts": {

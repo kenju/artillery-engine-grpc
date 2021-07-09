@@ -16,6 +16,8 @@ DEBUG=engine:grpc npm run start
 
 We use [GitHub Actions](https://help.github.com/en/actions) workflow to publish packages to https://www.npmjs.com/package/artillery-engine-grpc.
 
+Update `version` field in the `package.json`.
+
 Create `v*` tags and push to origin/master.
 
 ```
